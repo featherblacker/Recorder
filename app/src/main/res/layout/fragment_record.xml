@@ -52,9 +52,9 @@
 
     <ImageView
         android:id="@+id/record_button"
-        android:layout_width="123dp"
+        android:layout_width="121dp"
         android:layout_height="121dp"
-        android:src="@drawable/record_button"
+        android:src="@drawable/record_btn_stopped"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="100"
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@id/record_timer" />
 
     <ImageView
-        android:id="@+id/record_list-button"
+        android:id="@+id/record_list_button"
         android:layout_width="60dp"
         android:layout_height="70dp"
         android:padding="16dp"
