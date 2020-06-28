@@ -76,7 +76,21 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.record_list_button:
+
+                if(isRecording){
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                    alertDialog.setTitle("Audio is still recording");
+                    alertDialog.setMessage("Are you sure to stop recording?");
+                    alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            navController.navigate(R.id.action_recordFragment_to_audioListFragment);
+                        }
+                    });
+                    alertDialog.create().show();
+                }
                 navController.navigate(R.id.action_recordFragment_to_audioListFragment);
+
                 break;
             case R.id.record_button:
                 if (isRecording){
@@ -107,7 +121,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
         String recordPath = getActivity().getExternalFilesDir("/").getAbsolutePath();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
         Date now = new Date();
         recordFile = "Recording_"+formatter.format(now)+".wav";
         filenameText.setText("Recording, file name: "+recordFile);
@@ -135,4 +149,11 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(isRecording){
+            stopRecording();
+        }
+    }
 }

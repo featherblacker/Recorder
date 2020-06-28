@@ -1,5 +1,6 @@
 package com.example.monotostereo;
 
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,8 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
     private SeekBar playerSeekBar;
     private Handler seekBarHandler;
     private Runnable updateSeekBar;
+    private ImageView playLastBtn;
+    private ImageView playNextBtn;
 
     public AudioListFragment() {
         // Required empty public constructor
@@ -65,6 +68,8 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         playerFileName = view.findViewById(R.id.player_file_name);
         playerHeader = view.findViewById(R.id.player_header_title);
         playerSeekBar = view.findViewById(R.id.player_seek_bar);
+        playLastBtn = view.findViewById(R.id.last_audio);
+        playNextBtn = view.findViewById(R.id.next_audio);
 
         String path = getActivity().getExternalFilesDir("/").getAbsolutePath();
         File directory = new File(path);
@@ -89,6 +94,13 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
             }
         });
 
+        playNextBtn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         playBtn.setOnClickListener(new View.OnClickListener() {
 
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -112,7 +124,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if(fileToPlay!=null){
+                if (fileToPlay != null) {
                     pauseAudio();
                 }
             }
@@ -120,7 +132,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(fileToPlay!=null){
+                if (fileToPlay != null) {
                     int progress = seekBar.getProgress();
                     mediaPlayer.seekTo(progress);
                     resumeAudio();
@@ -145,6 +157,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         mediaPlayer.pause();
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_play_btn, null));
         isPlaying = false;
+        seekBarHandler.removeCallbacks(updateSeekBar);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -152,6 +165,8 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         mediaPlayer.start();
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_pause_btn, null));
         isPlaying = true;
+        updateRunnable();
+        seekBarHandler.postDelayed(updateSeekBar, 0);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -160,6 +175,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         isPlaying = false;
         playerHeader.setText("Stopped");
         mediaPlayer.stop();
+        seekBarHandler.removeCallbacks(updateSeekBar);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -193,6 +209,11 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
         playerSeekBar.setMax(mediaPlayer.getDuration());
         seekBarHandler = new Handler();
+        updateRunnable();
+        seekBarHandler.postDelayed(updateSeekBar, 0);
+    }
+
+    private void updateRunnable() {
         updateSeekBar = new Runnable() {
             @Override
             public void run() {
@@ -200,6 +221,14 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
                 seekBarHandler.postDelayed(this, 500);
             }
         };
-        seekBarHandler.postDelayed(updateSeekBar, 0);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (isPlaying) {
+            stopAudio();
+        }
     }
 }

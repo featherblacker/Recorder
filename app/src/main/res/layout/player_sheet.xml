@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/player_bg"
+    android:background="@drawable/media_header_bg"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     app:behavior_hideable="true"
     app:behavior_peekHeight="70dp"
@@ -23,23 +23,25 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="match_parent"
+            android:layout_width="351dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:paddingTop="24dp"
-            android:paddingBottom="24dp"
+            android:layout_weight="5"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
             app:srcCompat="@drawable/player_header"
-            tools:ignore="Suspicious0dp"/>
+            tools:ignore="Suspicious0dp" />
 
         <TextView
             android:id="@+id/player_header_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:fontFamily="@font/open_sans_semibold"
+            android:gravity="center_horizontal"
             android:paddingTop="24dp"
             android:paddingBottom="24dp"
             android:text="@string/media_player"
+            android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
@@ -47,7 +49,7 @@
             android:id="@+id/player_header_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="5"
             android:fontFamily="@font/open_sans_semibold"
             android:gravity="end"
             android:paddingTop="24dp"
@@ -64,22 +66,22 @@
         android:id="@+id/player_file_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/open_sans_semibold"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
+        android:fontFamily="@font/open_sans_semibold"
+        android:gravity="center_horizontal"
         android:text="File Name"
         android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        android:gravity="center_horizontal" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <ImageButton
         android:id="@+id/player_play_btn"
-        android:background="@drawable/player_bg"
+        android:background="@drawable/media_header_bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -90,10 +92,10 @@
         app:srcCompat="@drawable/player_play_btn" />
 
     <ImageButton
-        android:background="@drawable/player_bg"
-        android:id="@+id/imageView3"
-        android:layout_width="61dp"
+        android:id="@+id/last_audio"
+        android:layout_width="60dp"
         android:layout_height="50dp"
+        android:background="@drawable/media_header_bg"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/player_play_btn"
         app:layout_constraintEnd_toStartOf="@+id/player_play_btn"
@@ -102,10 +104,10 @@
         app:srcCompat="@drawable/player_back_btn" />
 
     <ImageButton
-        android:background="@drawable/player_bg"
-        android:id="@+id/imageView4"
-        android:layout_width="75dp"
-        android:layout_height="49dp"
+        android:id="@+id/next_audio"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:background="@drawable/media_header_bg"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/player_play_btn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,10 +117,15 @@
 
     <SeekBar
         android:id="@+id/player_seek_bar"
+        style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_margin="32dp"
-        android:thumb="@color/colorDarkBlue"
+        android:indeterminate="false"
+        android:maxHeight="20dp"
+        android:minHeight="20dp"
+        android:scrollbarThumbHorizontal="@drawable/list_pause_btn"
+        android:thumb="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
