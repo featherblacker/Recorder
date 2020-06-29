@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 
 public class AudioListFragment extends Fragment implements AudioListAdapter.onItemListClick {
@@ -45,6 +49,8 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
     private Runnable updateSeekBar;
     private ImageView playLastBtn;
     private ImageView playNextBtn;
+    private AudioListAdapter.AudioViewHolder audioViewHolder;
+    private Dictionary<String, Integer> filename;
 
     public AudioListFragment() {
         // Required empty public constructor
@@ -78,6 +84,10 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(audioListAdapter);
+        filename = new Hashtable<String, Integer>();
+        for (int i = 0; i < allFiles.length; i++) {
+            filename.put(allFiles[i].getName(), i);
+        }
 
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -94,11 +104,31 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
             }
         });
 
-        playNextBtn.setOnClickListener(new View.OnClickListener(){
+        playNextBtn.setOnClickListener(new View.OnClickListener() {
 
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-
+                int fileIndex = filename.get(fileToPlay.getName()) + 1;
+                if (fileIndex > allFiles.length - 1) {
+                    fileIndex = 0;
+                }
+                fileToPlay = allFiles[fileIndex];
+                stopAudio();
+                playAudio(fileToPlay);
+            }
+        });
+        playLastBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View view) {
+                int fileIndex = filename.get(fileToPlay.getName()) - 1;
+                if (fileIndex < 0) {
+                    fileIndex = allFiles.length - 1;
+                }
+                fileToPlay = allFiles[fileIndex];
+                stopAudio();
+                playAudio(fileToPlay);
             }
         });
         playBtn.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +175,7 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClickListener(File file, int position) {
-        fileToPlay = file;
+        fileToPlay = allFiles[position];
         if (isPlaying) {
             stopAudio();
         }
@@ -180,6 +210,8 @@ public class AudioListFragment extends Fragment implements AudioListAdapter.onIt
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void playAudio(File fileToPlay) {
+        Log.d("new", "onViewCreated: " + filename.get(fileToPlay.getName()));
+
         mediaPlayer = new MediaPlayer();
 
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);

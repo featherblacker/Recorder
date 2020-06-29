@@ -1,5 +1,6 @@
 package com.example.monotostereo;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,9 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
     private File[] allFiles;
     private TimeAgo timeAgo;
-    private  onItemListClick onItemListClick;
+    private onItemListClick onItemListClick;
 
-    public  AudioListAdapter(File[] allFiles, onItemListClick onItemListClick){
+    public AudioListAdapter(File[] allFiles, onItemListClick onItemListClick){
         this.allFiles = allFiles;
         this.onItemListClick = onItemListClick;
     }
@@ -33,7 +34,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
     @Override
     public void onBindViewHolder(@NonNull AudioViewHolder holder, int position) {
-        holder.list_title.setText(allFiles[position].getName().substring(10));
+        holder.list_title.setText(allFiles[position].getName().substring(allFiles[position].getName().length()-18, allFiles[position].getName().length()));
         holder.list_date.setText(timeAgo.getTimeAgo(allFiles[position].lastModified()));
     }
 
@@ -41,10 +42,10 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
     public int getItemCount() {
         return allFiles.length;
     }
+//    public int getPosition(){return getA}
 
     public class AudioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView list_image;
         private TextView list_title;
         private TextView list_date;
 
@@ -52,9 +53,13 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
             super(itemView);
 
             list_date = itemView.findViewById(R.id.list_date);
-            list_image = itemView.findViewById(R.id.list_image_view);
+            ImageView list_image = itemView.findViewById(R.id.list_image_view);
             list_title = itemView.findViewById(R.id.list_title);
             itemView.setOnClickListener(this);
+        }
+
+        public int getAbsolutePosition(){
+            return getAbsoluteAdapterPosition();
         }
 
         @Override
